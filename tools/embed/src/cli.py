@@ -114,7 +114,7 @@ def parse_args():
         "--provider",
         type=str,
         default=None,
-        choices=["ollama", "hf"],
+        choices=["ollama", "llmman", "hf"],
         help="Embedding provider",
     )
 

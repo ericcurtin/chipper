@@ -22,7 +22,11 @@ from haystack_integrations.document_stores.elasticsearch import (
 
 class ModelProvider:
     OLLAMA = "ollama"
+    # llmman serves the Ollama API on port 17434 (https://github.com/llmmanorg/llmman)
+    LLMMAN = "llmman"
     HUGGINGFACE = "huggingface"
+
+    OLLAMA_COMPATIBLE = (OLLAMA, LLMMAN)
 
 
 def generate_document_id(file_path: str, content: str) -> str:
@@ -63,7 +67,7 @@ class DocumentEmbedder:
             self.logger.debug("Setting up embedding pipeline")
             embedding_pipeline = Pipeline()
 
-            if self.provider == ModelProvider.OLLAMA:
+            if self.provider in ModelProvider.OLLAMA_COMPATIBLE:
                 document_embedder = OllamaDocumentEmbedder(
                     model=self.embedding_model, url=self.model_url
                 )
@@ -92,7 +96,7 @@ class DocumentEmbedder:
         if self.embedding_dimension is not None:
             return self.embedding_dimension
         try:
-            if self.provider == ModelProvider.OLLAMA:
+            if self.provider in ModelProvider.OLLAMA_COMPATIBLE:
                 text_embedder = OllamaTextEmbedder(
                     model=self.embedding_model, url=self.model_url
                 )

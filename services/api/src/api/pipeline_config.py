@@ -57,11 +57,13 @@ def get_env_value(
 
 def get_provider_specific_config() -> dict[str, Any]:
     """Get provider-specific configuration."""
-    provider = (
-        ModelProvider.HUGGINGFACE
-        if os.getenv(EnvKeys.PROVIDER, "ollama").lower() == "hf"
-        else ModelProvider.OLLAMA
-    )
+    provider_name = os.getenv(EnvKeys.PROVIDER, "ollama").lower()
+    if provider_name == "hf":
+        provider = ModelProvider.HUGGINGFACE
+    elif provider_name == ModelProvider.LLMMAN:
+        provider = ModelProvider.LLMMAN
+    else:
+        provider = ModelProvider.OLLAMA
 
     config = {
         "provider": provider,
@@ -80,6 +82,8 @@ def get_provider_specific_config() -> dict[str, Any]:
 
     if provider == ModelProvider.HUGGINGFACE:
         config["hf_api_key"] = os.getenv(EnvKeys.HF_API_KEY)
+    elif provider == ModelProvider.LLMMAN:
+        config["ollama_url"] = os.getenv(EnvKeys.OLLAMA_URL, "http://localhost:17434")
     elif ollama_url := os.getenv(EnvKeys.OLLAMA_URL):
         config["ollama_url"] = ollama_url
 

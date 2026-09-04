@@ -24,8 +24,8 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 APP_VERSION = os.getenv("APP_VERSION", "[DEV]")
 BUILD_NUMBER = os.getenv("APP_BUILD_NUM", "0")
 
-# Provider settings
-PROVIDER_IS_OLLAMA = os.getenv("PROVIDER", "ollama") == "ollama"
+# Provider settings (llmman speaks the Ollama API, so the proxy works with it too)
+PROVIDER_IS_OLLAMA = os.getenv("PROVIDER", "ollama") in ("ollama", "llmman")
 
 # Feature flags
 ALLOW_MODEL_CHANGE = os.getenv("ALLOW_MODEL_CHANGE", "true").lower() == "true"

@@ -32,7 +32,7 @@ If you **find Chipper useful**, **leaving a star ⭐ would be lovely** and will 
 
 ## Features
 
-- **Local & Cloud Model Support** - Run models locally with [Ollama](https://ollama.com/) or connect to remote models via the [Hugging Face API](https://huggingface.co/).
+- **Local & Cloud Model Support** - Run models locally with [Ollama](https://ollama.com/) or [llmman](https://github.com/llmmanorg/llmman) or connect to remote models via the [Hugging Face API](https://huggingface.co/).
 - **ElasticSearch Integration** - Store and retrieve vectorized data efficiently with scalable indexing.
 - **Document Chunking** - Process and split documents into structured segments.
 - **Web Scraping** - Extract and index content from web pages.

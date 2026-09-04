@@ -32,7 +32,7 @@ class PipelineComponentFactory:
             f"Initializing Text Embedder with model: {self.config.embedding_model}"
         )
 
-        if self.config.provider == ModelProvider.OLLAMA:
+        if self.config.provider in ModelProvider.OLLAMA_COMPATIBLE:
             embedder = OllamaTextEmbedder(
                 model=self.config.embedding_model, url=self.config.ollama_url
             )
@@ -79,7 +79,7 @@ class PipelineComponentFactory:
         """Create chat generator based on provider configuration."""
         self.logger.info(f"Initializing Generator with model: {self.config.model_name}")
 
-        if self.config.provider == ModelProvider.OLLAMA:
+        if self.config.provider in ModelProvider.OLLAMA_COMPATIBLE:
             generation_kwargs = {}
 
             # Core generation parameters

@@ -4,7 +4,11 @@ from typing import Optional
 
 class ModelProvider:
     OLLAMA = "ollama"
+    # llmman serves the Ollama API on port 17434 (https://github.com/llmmanorg/llmman)
+    LLMMAN = "llmman"
     HUGGINGFACE = "huggingface"
+
+    OLLAMA_COMPATIBLE = (OLLAMA, LLMMAN)
 
 
 def _default_none() -> None:
@@ -69,5 +73,8 @@ class QueryPipelineConfig:
                 "HuggingFace API key is required when using HuggingFace provider"
             )
 
-        if self.provider not in [ModelProvider.OLLAMA, ModelProvider.HUGGINGFACE]:
+        if self.provider not in [
+            *ModelProvider.OLLAMA_COMPATIBLE,
+            ModelProvider.HUGGINGFACE,
+        ]:
             raise ValueError(f"Unsupported provider: {self.provider}")

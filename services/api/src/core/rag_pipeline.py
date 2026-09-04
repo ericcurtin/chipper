@@ -41,7 +41,7 @@ class RAGQueryPipeline:
     def initialize_and_check_models(self) -> Generator[dict, None, None]:
         """Verify model availability and health, pulling models if needed."""
         try:
-            if self.config.provider == ModelProvider.OLLAMA:
+            if self.config.provider in ModelProvider.OLLAMA_COMPATIBLE:
                 if not self.model_manager:
                     raise ValueError(
                         "Ollama model manager not initialized but provider is Ollama"
@@ -113,7 +113,7 @@ class RAGQueryPipeline:
 
     def _init_model_manager(self):
         self.model_manager = None
-        if self.config.provider == ModelProvider.OLLAMA:
+        if self.config.provider in ModelProvider.OLLAMA_COMPATIBLE:
             self.model_manager = OllamaModelManager(
                 self.config.ollama_url, self.config.allow_model_pull
             )

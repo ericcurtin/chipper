@@ -24,11 +24,14 @@ class PipelineConfig:
     hf_api_key: Optional[str] = None
 
     def __post_init__(self):
-        if self.provider not in [ModelProvider.OLLAMA, ModelProvider.HUGGINGFACE]:
+        if self.provider not in [
+            *ModelProvider.OLLAMA_COMPATIBLE,
+            ModelProvider.HUGGINGFACE,
+        ]:
             raise ValueError(f"Unsupported provider: {self.provider}")
 
-        if self.provider == ModelProvider.OLLAMA and not self.ollama_url:
-            raise ValueError("Ollama URL is required when using Ollama provider")
+        if self.provider in ModelProvider.OLLAMA_COMPATIBLE and not self.ollama_url:
+            raise ValueError(f"Ollama URL is required when using {self.provider}")
 
         if self.provider == ModelProvider.HUGGINGFACE and not self.hf_api_key:
             raise ValueError(
@@ -89,6 +92,8 @@ class RAGEmbedder:
         provider = ModelProvider.OLLAMA
         if provider_name.lower() == "hf":
             provider = ModelProvider.HUGGINGFACE
+        elif provider_name.lower() == ModelProvider.LLMMAN:
+            provider = ModelProvider.LLMMAN
 
         if not embedding_model:
             if provider == ModelProvider.HUGGINGFACE:
@@ -114,7 +119,7 @@ class RAGEmbedder:
         self._log_configuration()
         self.document_store = self._initialize_document_store()
 
-        if self.config.provider == ModelProvider.OLLAMA:
+        if self.config.provider in ModelProvider.OLLAMA_COMPATIBLE:
             self._initialize_ollama()
 
         self.metrics_tracker = MetricsTracker()
