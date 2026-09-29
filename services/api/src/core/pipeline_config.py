@@ -78,3 +78,6 @@ class QueryPipelineConfig:
             ModelProvider.HUGGINGFACE,
         ]:
             raise ValueError(f"Unsupported provider: {self.provider}")
+
+        if self.provider in ModelProvider.OLLAMA_COMPATIBLE and not self.ollama_url:
+            raise ValueError(f"ollama_url is required when using {self.provider}")
