@@ -120,7 +120,7 @@ class RAGEmbedder:
         self.document_store = self._initialize_document_store()
 
         if self.config.provider in ModelProvider.OLLAMA_COMPATIBLE:
-            self._initialize_ollama()
+            self._initialize_model_server()
 
         self.metrics_tracker = MetricsTracker()
 
@@ -132,32 +132,37 @@ class RAGEmbedder:
         for field_name, field_value in config_dict.items():
             self.logger.info(f"- {field_name}: {field_value}")
 
-    def _check_ollama_health(self):
+    @property
+    def _server_name(self) -> str:
+        return "llmman" if self.config.provider == ModelProvider.LLMMAN else "Ollama"
+
+    def _check_server_health(self):
+        name = self._server_name
         try:
             self.logger.info(
-                f"Checking connectivity to Ollama server at {self.config.ollama_url}"
+                f"Checking connectivity to {name} server at {self.config.ollama_url}"
             )
             health_response = requests.get(self.config.ollama_url)
 
             if health_response.status_code == 200:
-                self.logger.info("Successfully connected to the Ollama server")
+                self.logger.info(f"Successfully connected to the {name} server")
             else:
                 self.logger.error(
-                    f"Failed to connect to the Ollama server. "
+                    f"Failed to connect to the {name} server. "
                     f"Status code: {health_response.status_code}"
                 )
-                raise Exception("Ollama server connectivity check failed.")
+                raise Exception(f"{name} server connectivity check failed.")
 
         except Exception as e:
             self.logger.error(
-                f"Error during Ollama server connectivity check: {str(e)}",
+                f"Error during {name} server connectivity check: {str(e)}",
                 exc_info=True,
             )
             raise
 
-    def _initialize_ollama(self):
+    def _initialize_model_server(self):
         try:
-            self._check_ollama_health()
+            self._check_server_health()
 
             self.logger.info(f"Checking embedding model: {self.config.embedding_model}")
             show_response = requests.post(
